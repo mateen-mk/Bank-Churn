@@ -31,7 +31,7 @@ list_of_files = [
     "src/core/exception/__init__.py",
     
     "notebooks/trails.ipynb",
-    "notebooks/figures",
+    "notebooks/figures/",
 
     "settings/schema.yaml",
     "settings/model.yaml",
