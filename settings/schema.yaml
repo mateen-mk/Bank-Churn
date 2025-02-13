@@ -1,0 +1,84 @@
+features:
+  RowNumber:
+    type: integer
+    description: Index of row in dataset.
+
+  CustomerId:
+    type: string
+    description: Unique identifier for customer (considered internal, may be dropped).
+
+  Surname:
+    type: string
+    description: Customer's surname (sensitive information).
+
+  CreditScore:
+    type: float
+    description: Customer's credit score.
+
+  Geography:
+    type: string
+    description: Customer's geographic location.
+
+  Gender:
+    type: string
+    description: Customer's gender.
+
+  Age:
+    type: integer
+    description: Customer's age.
+
+  Tenure:
+    type: float
+    description: Number of years customer has been with the institution.
+
+  Balance:
+    type: float
+    description: Customer's account balance.
+
+  NumOfProducts:
+    type: integer
+    description: Number of products/services held by customer.
+
+  HasCrCard:
+    type: boolean
+    description: Whether customer has a credit card.
+
+  IsActiveMember:
+    type: boolean
+    description: Whether customer is an active member.
+
+  EstimatedSalary:
+    type: float
+    description: Customer's estimated annual salary.
+
+  Exited:
+    type: boolean
+    description: Whether customer has exited the institution.
+
+# Sensitive Columns to Remove at the time of Ingestion
+sensitive_columns:
+  - Surname
+  - CustomerId
+
+# Drop Columns (to prevent data leakage)
+drop_columns:
+
+# Data Cleaning
+missing_values_columns:
+
+noisy_values_columns:
+
+# Data Transformation
+transformation:
+  label_encoding:
+    - Gender
+    - HasCrCard
+    - IsActiveMember
+
+  onehot_encoding:
+    - Geography
+    - Tenure
+
+  scaling:
+    - Age
+    - EstimatedSalary
