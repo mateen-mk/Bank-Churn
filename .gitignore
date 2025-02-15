@@ -172,4 +172,4 @@ cython_debug/
 
 
 .bank/
-notebooks/data/
+notebooks/data/*
