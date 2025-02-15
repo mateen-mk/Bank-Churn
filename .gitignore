@@ -172,4 +172,4 @@ cython_debug/
 
 
 .bank/
-notebooks/bank_churn.csv
+notebooks/data/
