@@ -61,17 +61,19 @@ list_of_files = [
     "setup.py"
 ]
 
-# Create directories and files
-for filepath in list_of_files:
-    if filepath.endswith("/"):  # Check if it's a directory
-        os.makedirs(filepath, exist_ok=True)
-        print(f'Created Folder: {filepath}')
-    else:  # It's a file
-        filepath = Path(filepath)
-        filedir = filepath.parent
-        if filedir:  # Ensure parent directory exists
-            os.makedirs(filedir, exist_ok=True)
-            print(f'Created File: {filepath}')
-        if not filepath.exists():  # Create the file if it doesn't exist
-            filepath.touch()
-            print(f'Created/Touched File: {filepath}')
+def create_folder_structure():
+    # Create directories and files
+    for filepath in list_of_files:
+        if filepath.endswith("/"):  # Check if it's a directory
+            os.makedirs(filepath, exist_ok=True)
+        else:  # It's a file
+            filepath = Path(filepath)
+            filedir = filepath.parent
+            if filedir:  # Ensure parent directory exists
+                os.makedirs(filedir, exist_ok=True)
+            if not filepath.exists():  # Create the file if it doesn't exist
+                filepath.touch()
+
+if __name__ == '__main__': 
+    create_folder_structure()
+    print("Folder structure created successfully.")
