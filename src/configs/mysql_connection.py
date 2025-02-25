@@ -6,10 +6,10 @@ import pandas as pd
 from typing import Optional
 from sqlalchemy import create_engine
 
-from src.core.exception import HotelBookingException
+from src.core.exception import BankChurnException
 
-from src.core.constants.common_constant import (MYSQL_ENGINE_URL,
-                                                DATABASE_NAME)
+from src.core.constants.common import (MYSQL_ENGINE_URL,
+                                       DATABASE_NAME)
 
 
 
@@ -37,8 +37,8 @@ class MySQLConnect:
             
             self.engine = MySQLConnect.engine
         
-        except HotelBookingException as e:
-            raise HotelBookingException(f"MySQL connection error: {e}", sys)
+        except BankChurnException as e:
+            raise BankChurnException(f"MySQL connection error: {e}", sys)
 
 
 
@@ -58,7 +58,7 @@ class HotelBookingData:
         try:
             self.mysql_connect = MySQLConnect()
         except Exception as e:
-            raise HotelBookingException(e, sys)
+            raise BankChurnException(e, sys)
 
     def export_data_as_dataframe(self, dataset_name: str, database_name: Optional[str] = None) -> pd.DataFrame:
         """
@@ -84,4 +84,4 @@ class HotelBookingData:
             
             return df
         except Exception as e:
-            raise HotelBookingException(e, sys)
+            raise BankChurnException(e, sys)
