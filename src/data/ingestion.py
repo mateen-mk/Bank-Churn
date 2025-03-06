@@ -36,7 +36,7 @@ class DataIngestion:
 
             self.dataset_name = DATASET_NAME
             self.data_ingestion_config = data_ingestion_config
-            # Read the schema configuration for sensitive columns and other details
+            # Read the schema configuration for insignificant columns and other details
             self._schema_config = read_yaml(file_path=SCHEMA_FILE_PATH)
      
         except Exception as e:
@@ -68,31 +68,31 @@ class DataIngestion:
 
 
 
-    def drop_sensitive_columns(self, dataframe: DataFrame) -> DataFrame:
+    def drop_insignificant_columns(self, dataframe: DataFrame) -> DataFrame:
         """
-        Method Name :   drop_sensitive_columns
-        Description :   This method drops sensitive columns from the dataframe.
+        Method Name :   drop_insignificant_columns
+        Description :   This method drops insignificant columns from the dataframe.
 
-        Output      :   DataFrame with sensitive columns removed.
+        Output      :   DataFrame with insignificant columns removed.
         On Failure  :   Write an exception log and then raise an exception
         """
-        logging.info("Entered drop_sensitive_columns method of DataIngestion class")
+        logging.info("Entered drop_insignificant_columns method of DataIngestion class")
 
         try:
-            # Retrieve sensitive columns from schema config
-            sensitive_columns = self._schema_config.get("sensitive_columns", [])
+            # Retrieve insignificant columns from schema config
+            insignificant_columns = self._schema_config.get("insignificant_columns", [])
 
-            if sensitive_columns:
-                logging.info(f"Removing sensitive columns: {sensitive_columns}")
-                dataframe = dataframe.drop(columns=sensitive_columns, errors="ignore")
+            if insignificant_columns:
+                logging.info(f"Removing insignificant columns: {insignificant_columns}")
+                dataframe = dataframe.drop(columns=insignificant_columns, errors="ignore")
 
 
-            logging.info("Exited drop_sensitive_columns method of DataIngestion class")
+            logging.info("Exited drop_insignificant_columns method of DataIngestion class")
             return dataframe
         
         except Exception as e:
-            logging.error(f"Error in drop_sensitive_columns: {str(e)}")
-            raise BankChurnException(f"Error in drop_sensitive_columns: {str(e)}", sys) from e
+            logging.error(f"Error in drop_insignificant_columns: {str(e)}")
+            raise BankChurnException(f"Error in drop_insignificant_columns: {str(e)}", sys) from e
         
 
 
@@ -111,8 +111,8 @@ class DataIngestion:
             logging.info("Got the data from MySQL Database")
 
 
-            dataframe = self.drop_sensitive_columns(dataframe)
-            logging.info("Dropped sensitive columns from the dataframe")
+            dataframe = self.drop_insignificant_columns(dataframe)
+            logging.info("Dropped insignificant columns from the dataframe")
 
 
             data_file_path = self.data_ingestion_config.data_file_path
