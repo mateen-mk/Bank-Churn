@@ -254,7 +254,7 @@ def load_object(file_path: str) -> object:
 
 # ________________________________________
 # |                                      |
-# |          Data Split Helpers          |
+# |             Split Helpers            |
 # |--------------------------------------|
 # | Functions for splitting train and    |
 # | test sets, X and y features.         |
