@@ -13,12 +13,12 @@ from src.core.entities.config_entity import DataValidationConfig
 from src.core.entities.artifact_entity import (DataIngestionArtifact,
                                                DataValidationArtifact)
 
-from src.core.utils.data_utils import read_data
-from src.core.utils.yaml_utils import (read_yaml, write_yaml)
-from src.core.utils.train_test_split_utils import train_test_split_for_data_validation
+from src.core.utils.data import read_data
+from src.core.utils.yaml import (read_yaml, write_yaml)
+from src.core.utils.train_test_split import train_test_split_for_data_validation
 
-from src.core.constants.common_constant import (SCHEMA_FILE_PATH,
-                                                VALIDATION_REPORT_SPLIT_RATIO)
+from src.core.constants.common import (SCHEMA_FILE_PATH,
+                                       VALIDATION_REPORT_SPLIT_RATIO)
 
 
 
@@ -47,19 +47,19 @@ class DataValidation:
 
     def validate_number_of_columns(self, dataframe: DataFrame) -> bool:
         """
-        Validates if the number of required columns (excluding sensitive columns) in the DataFrame 
+        Validates if the number of required columns (excluding insignificant columns) in the DataFrame 
         matches the schema configuration. Logs missing columns for better traceability.
         """
         try:
-            # Retrieve schema and sensitive columns from the configuration
+            # Retrieve schema and insignificant columns from the configuration
             numerical_columns = self._schema_config.get("numerical_columns", [])
             categorical_columns = self._schema_config.get("categorical_columns", [])
-            sensitive_columns = self._schema_config.get("sensitive_columns", [])
+            insignificant_columns = self._schema_config.get("insignificant_columns", [])
             
             
             # Combine numerical and categorical columns into required columns
             required_columns = numerical_columns + categorical_columns
-            required_columns = [col for col in required_columns if col not in sensitive_columns]
+            required_columns = [col for col in required_columns if col not in insignificant_columns]
 
             
             # Identify any missing columns
@@ -72,7 +72,7 @@ class DataValidation:
 
             # Logging the validation result and details
             if status:
-                logging.info("All required columns are present (excluding sensitive columns).")
+                logging.info("All required columns are present (excluding insignificant columns).")
             
             else:
                 logging.error(f"Missing required columns: {missing_columns}")
@@ -192,7 +192,7 @@ class DataValidation:
             status = self.is_column_exist(df=df)
             logging.info(f"Validation of column existence in dataframe: {status}")
             if not status:
-                validation_error_msg += "Required or sensitive columns validation failed for dataframe.\n"
+                validation_error_msg += "Required or insignificant columns validation failed for dataframe.\n"
 
 
             # Consolidate validation status
