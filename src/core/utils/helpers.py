@@ -5,7 +5,10 @@ import sys
 
 import json
 import yaml
+import dill 
+
 import pandas as pd
+import streamlit as st
 
 from src.core.exception import BankChurnException
 
@@ -17,7 +20,7 @@ from src.core.exception import BankChurnException
 #----------------------------------------------------------------
 
 # Function for reading JSON file from provided path
-@staticmethod
+@st.cache_resource(allow_output_mutation=True)
 def read_json(file_path: str) -> dict:
     """
     Read a JSON file and return its content as a dictionary.
@@ -79,7 +82,7 @@ def write_json(file_path: str, data, replace: bool = False) -> None:
 #----------------------------------------------------------------
 
 # Function for Reading Yaml file from provided path
-@staticmethod
+@st.cache_resource(allow_output_mutation=True)
 def read_yaml(file_path: str) -> dict:
     """
     Read a YAML file and return its content as a dictionary.
@@ -135,7 +138,7 @@ def write_yaml(file_path: str, data, replace: bool = False) -> None:
 #----------------------------------------------------------------
 
 # Function for Reading data from a file
-@staticmethod
+@st.cache_resource(allow_output_mutation=True)
 def read_data(file_path: str) -> pd.DataFrame:
     """
     Read data from a CSV file and return it as a DataFrame.
@@ -181,3 +184,54 @@ def save_data(dataframe: pd.DataFrame, file_path: str) -> None:
     
     except Exception as e:
         raise BankChurnException(f"Error saving data to {file_path}: {str(e)}", sys) from e
+    
+
+
+#----------------------------------------------------------------
+#----------------------- Object Helpers -------------------------
+#----------------------------------------------------------------
+# Function for saving the object
+@staticmethod
+def save_object(file_path: str, obj: object) -> None:
+    """
+    Save an object to a file using the dill module.
+    
+    Parameters:
+    file_path (str): The path to the file to be written.
+    obj (object): The object to be written to the file.
+    
+    Raises:
+    BankChurnException: If an error occurs while saving the object.
+    """
+    try:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "wb") as file_obj:
+            dill.dump(obj, file_obj)
+
+    except Exception as e:
+        raise BankChurnException(e, sys) from e
+    
+
+# Function for loading the object
+@st.cache_resource(allow_output_mutation=True)
+def load_object(file_path: str) -> object:
+    """
+    Load an object from a file using the dill module.
+    
+    Parameters:
+    file_path (str): The path to the file containing the object to be loaded.
+    
+    Returns:
+    object: The loaded object from the file.
+    
+    Raises:
+    BankChurnException: If an error occurs while loading the object.
+    """
+    try:
+        with open(file_path, "rb") as file_obj:
+            obj = dill.load(file_obj)
+
+        return obj
+
+    except Exception as e:
+        raise BankChurnException(e, sys) from e
