@@ -174,3 +174,4 @@ cython_debug/
 .bank/
 notebooks/data/*
 artifacts/*
+notebooks/banking-churn-analysis-modeling.ipynb
