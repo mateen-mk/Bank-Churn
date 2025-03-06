@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from.env file
 
 # Common constants
-TARGET_COLUMN: str = 'is_canceled'
+TARGET_COLUMN: str = 'Exited'
 SCHEMA_FILE_PATH = os.path.join("settings", "schema.yaml")
 
 
