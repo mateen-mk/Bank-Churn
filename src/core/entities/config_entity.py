@@ -16,3 +16,10 @@ class DataIngestionConfig:
     interim_data_dir = os.path.join(from_root(),ARTIFACTS_DIR, DATA_DIR, INTERIM_DATA_DIR)
     raw_file_path: str = os.path.join(raw_data_dir, DATA_INGESTION_RAW_FILE) 
     data_file_path: str = os.path.join(interim_data_dir, DATA_INGESTION_DATA_FILE)
+
+
+# Data Validation Configuration
+@dataclass
+class DataValidationConfig:
+    validation_report_dir = os.path.join(from_root(), ARTIFACTS_DIR, REPORTS_DIR, VALIDATION_REPORT_DIR)
+    validation_report_file_path: str = os.path.join(validation_report_dir, DATA_VALIDATION_REPORT)
