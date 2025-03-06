@@ -1,4 +1,4 @@
-# 
+# Helper functions
 
 import os
 import sys
@@ -9,6 +9,8 @@ import dill
 
 import pandas as pd
 import streamlit as st
+
+from sklearn.model_selection import train_test_split
 
 from src.core.exception import BankChurnException
 
@@ -23,6 +25,7 @@ from src.core.exception import BankChurnException
 # |______________________________________|
 
 @st.cache_resource(allow_output_mutation=True)
+@staticmethod
 def read_json(file_path: str) -> dict:
     """
     Read a JSON file and return its content as a dictionary.
@@ -87,6 +90,7 @@ def write_json(file_path: str, data, replace: bool = False) -> None:
 # |______________________________________|
 
 @st.cache_resource(allow_output_mutation=True)
+@staticmethod
 def read_yaml(file_path: str) -> dict:
     """
     Read a YAML file and return its content as a dictionary.
@@ -145,6 +149,7 @@ def write_yaml(file_path: str, data, replace: bool = False) -> None:
 # |______________________________________|
 
 @st.cache_resource(allow_output_mutation=True)
+@staticmethod
 def read_data(file_path: str) -> pd.DataFrame:
     """
     Read data from a CSV file and return it as a DataFrame.
@@ -222,6 +227,7 @@ def save_object(file_path: str, obj: object) -> None:
     
 
 @st.cache_resource(allow_output_mutation=True)
+@staticmethod
 def load_object(file_path: str) -> object:
     """
     Load an object from a file using the dill module.
@@ -241,5 +247,130 @@ def load_object(file_path: str) -> object:
 
         return obj
 
+    except Exception as e:
+        raise BankChurnException(e, sys) from e
+
+
+
+# ________________________________________
+# |                                      |
+# |          Data Split Helpers          |
+# |--------------------------------------|
+# | Functions for splitting train and    |
+# | test sets, X and y features.         |
+# | Data for Data Validation, Model      |
+# | Building.                            |
+# |______________________________________|
+
+@st.cache_resource(allow_output_mutation=True)
+@staticmethod
+def split_data(dataframe: pd.DataFrame, test_size: float) -> tuple:
+    """
+    Method Name: split_data
+    Description :   Splits the given DataFrame into three datasets: train, test, and validation.
+    
+    Input       :   dataframe       -> The input DataFrame (train/test).
+                :   test_size       -> The size of the test dataset in floating point format (0.25) 25% of the whole dataframe.
+    
+    Output      :   tuple           -> A tuple containing the training DataFrame and the testing DataFrame.
+    """ 
+    try:
+        # Split into train and test data
+        train_data, test_data = train_test_split(
+            dataframe, 
+            test_size=test_size,  
+            random_state=12, 
+            shuffle=True
+        )
+
+        return train_data, test_data
+    
+    except Exception as e:
+        raise BankChurnException(f"Error in split_data: {str(e)}", sys) from e
+
+
+@st.cache_resource(allow_output_mutation=True)
+@staticmethod
+def separate_features_and_target(dataframe: pd.DataFrame, target_column: str) -> tuple:
+    """
+    Method Name :   separate_features_and_target
+    Description :   Separates independent features and dependent (target) feature from the DataFrame.
+    
+    Input       :   df              -> The input DataFrame (train/test).
+                :   target_column   -> The name of the target column in the DataFrame.
+    
+    Output      :   tuple           -> A tuple containing the independent features DataFrame and the target feature series.
+    """
+    try:        
+        # Separating independent features (X) and target feature (y)
+        X = dataframe.drop(columns=[target_column], axis=1)
+        y = dataframe[target_column]
+        
+        return X, y
+
+    except Exception as e:
+        raise BankChurnException(f"Error in separate_features_and_target: {str(e)}", sys) from e
+
+
+@st.cache_resource(allow_output_mutation=True)
+@staticmethod
+def train_test_split_for_data_validation(dataframe: pd.DataFrame, test_size: float) -> tuple:
+    """
+    Perform train-test split on the given DataFrame for data validation.
+
+    :param dataframe: The DataFrame to split.
+    :param test_size: The proportion of the dataset to include in the test split.
+    :return: A tuple containing the training set and the testing set.
+    """
+    try:
+        train_set, test_set = train_test_split(dataframe, test_size=test_size, random_state=42)
+        return train_set, test_set
+    except Exception as e:
+        raise BankChurnException(e, sys) from e
+
+
+@st.cache_resource(allow_output_mutation=True)
+@staticmethod
+def train_test_split_for_model_building(dataframe: pd.DataFrame, test_size: float, target_column: str) -> tuple:
+    """
+    Perform train-test split on the given DataFrame with stratification for model training.
+
+    :param dataframe: The DataFrame to split.
+    :param test_size: The proportion of the dataset to include in the test split.
+    :param target_column: The name of the target column to stratify on.
+    :return: A tuple containing the training set and the testing set.
+    """
+    try:
+        # Separate the features and the target column
+        X = dataframe.drop(columns=[target_column])
+        y = dataframe[target_column]
+
+        # Perform train-test split with stratification
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, stratify=y)
+
+        # # Combine the features and target columns back into DataFrames
+        # train_set = pd.concat([X_train, y_train], axis=1)
+        # test_set = pd.concat([X_test, y_test], axis=1)
+
+        return X_train, X_test, y_train, y_test 
+    except Exception as e:
+        raise BankChurnException(e, sys) from e
+
+
+@st.cache_resource(allow_output_mutation=True)
+@staticmethod
+def train_test_split_for_tuning(X_train: pd.DataFrame, y_train: pd.Series, test_size: float) -> tuple:
+    """
+    Perform train-test split on the given training data for hyperparameter tuning.
+
+    :param X_train: The training features DataFrame.
+    :param y_train: The training target Series.
+    :param test_size: The proportion of the dataset to include in the test split.
+    :return: A tuple containing the tuning set features and target.
+    """
+    try:
+        # Perform train-test split for hyperparameter tuning
+        X_tune, _, y_tune, _ = train_test_split(X_train, y_train, test_size=test_size)
+        return X_tune, y_tune
     except Exception as e:
         raise BankChurnException(e, sys) from e
