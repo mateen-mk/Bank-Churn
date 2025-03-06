@@ -8,6 +8,7 @@ load_dotenv()  # Load environment variables from.env file
 
 # Common constants
 TARGET_COLUMN: str = 'Exited'
+TARGET_MAPPING: dict = {'No': 0, 'Yes': 1}
 SCHEMA_FILE_PATH = os.path.join("settings", "schema.yaml")
 
 
