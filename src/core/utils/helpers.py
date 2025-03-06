@@ -14,10 +14,14 @@ from src.core.exception import BankChurnException
 
 
 
+# ________________________________________
+# |                                      |
+# |             JSON Helpers             |
+# |--------------------------------------|
+# | Functions for parsing, validating,   |
+# | and manipulating JSON data.          |
+# |______________________________________|
 
-#----------------------------------------------------------------
-#------------------------ Json Helpers --------------------------
-#----------------------------------------------------------------
 
 # Function for reading JSON file from provided path
 @st.cache_resource(allow_output_mutation=True)
@@ -190,6 +194,7 @@ def save_data(dataframe: pd.DataFrame, file_path: str) -> None:
 #----------------------------------------------------------------
 #----------------------- Object Helpers -------------------------
 #----------------------------------------------------------------
+
 # Function for saving the object
 @staticmethod
 def save_object(file_path: str, obj: object) -> None:
