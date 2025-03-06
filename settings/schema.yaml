@@ -56,7 +56,8 @@ features:
     description: Whether customer has exited the institution.
 
 # Sensitive Columns to Remove at the time of Ingestion
-sensitive_columns:
+insignificant_columns:
+  - RowNumber
   - Surname
   - CustomerId
 
@@ -65,8 +66,10 @@ drop_columns:
 
 # Data Cleaning
 missing_values_columns:
+  # there are no columns with missing values
 
 noisy_values_columns:
+  # there are no columns with outliers
 
 # Data Transformation
 transformation:
