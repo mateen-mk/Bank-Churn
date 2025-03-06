@@ -10,8 +10,7 @@ from src.configs.mysql_connection import HotelBookingData
 from src.core.entities.config_entity import DataIngestionConfig
 from src.core.entities.artifact_entity import DataIngestionArtifact
 
-from src.core.utils.yaml import read_yaml 
-from src.core.utils.data import save_data
+from src.core.utils.helpers import (read_yaml, save_data) 
 
 from src.core.constants.common import (DATASET_NAME,
                                        SCHEMA_FILE_PATH)
